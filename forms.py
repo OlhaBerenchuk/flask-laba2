@@ -8,16 +8,12 @@ class UserForm(Form):
     email = StringField('email', validators=[InputRequired(), Email(message="It\'s not an email!")])
 
 
-class FileForm(Form):
+class FunctionForm(Form):
     name = StringField('name', validators=[InputRequired()])
     link = StringField('link', validators=[InputRequired(), URL(message="It\'s not an url")])
 
 
-class DocumentationForm(Form):
-    link = StringField('link', validators=[InputRequired(), URL(message="It\'s not an url")])
-    actor = StringField('actor', validators=[InputRequired()])
+class CaseForm(Form):
+    name = StringField('link', validators=[InputRequired(), URL(message="It\'s not an url")])
+    version = StringField('actor', validators=[InputRequired()])
 
-
-class LanguageForm(Form):
-    name = StringField('name', validators=[InputRequired()])
-    version = StringField('version', validators=[InputRequired()])

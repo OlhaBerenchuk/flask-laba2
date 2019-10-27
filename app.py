@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, flash,\
     redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from forms import UserForm, FileForm, DocumentationForm
+from forms import UserForm, FunctionForm, CaseForm
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://pyaumkueyzideg:04138428c08de9af6e296214ba8f2cf43eb59b0bed0ad3d6bf83e06e667bc23c@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d4btdruvjcdrq9"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://zsvdaxdweixisy:be124cabeeab510cfb568f0caa4ce35843ce0c6537cc153171916bed142fee56@ec2-75-101-128-10.compute-1.amazonaws.com:5432/da8dfm6fl31skk"
 app.config['SECRET_KEY'] = "8ew9fyweuihwe8fwe8fwyefw"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -19,7 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(45), unique=True, primary_key=True, nullable=False)
     name = db.Column(db.String(45))
     password = db.Column(db.String(100))
-    function = db.relationship('Functions', backref='user')
+    function = db.relationship('Function', backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -36,7 +36,7 @@ class Case(db.Model):
         return '<Case %r>' % self.name
 
 
-class Funtion(db.Model):
+class Function(db.Model):
     __tablename__ = 'functions'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
@@ -96,23 +96,23 @@ def delete_user(id):
     return redirect('/user')
 
 
-@app.route('/file', methods=['GET'])
-def files():
+@app.route('/function', methods=['GET'])
+def function():
     result = []
     form = FileForm()
-    files = File.query.all()
-    for file in files:
-        result.append([file.id, file.name, file.link])
+    functions = Funtion.query.all()
+    for function in functions:
+        result.append([function.id, function.name, function.link])
     return render_template('files.html', rows=result, form=form)
 
 
-@app.route('/insert_file', methods=['post'])
-def insert_file():
-    form = FileForm()
+@app.route('/insert_function', methods=['post'])
+def insert_function():
+    form = FunctionForm()
     name = form.name.data
     link = form.link.data
-    file = File(name=name, link=link)
-    db.session.add(file)
+    function = Funtion(name=name, link=link)
+    db.session.add(function)
     db.session.commit()
     return redirect('/file')
 
