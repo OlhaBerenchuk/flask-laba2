@@ -8,8 +8,8 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://zsvdaxdweixisy:be124cabeeab510cfb568f0caa4ce35843ce0c6537cc153171916bed142fee56@ec2-75-101-128-10.compute-1.amazonaws.com:5432/da8dfm6fl31skk"
-app.config['SECRET_KEY'] = "8ew9fyweuihwe8fwe8fwyefw"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://qmazhmdshmhlxd:1e503cc07dfd23503fa5faad3ee107fc13a945359aa05102050a557033545632@ec2-54-243-44-102.compute-1.amazonaws.com:5432/d39r230tj7mvp8"
+app.config['SECRET_KEY'] = "89cycerucheriufhwejlfbwiuefh2"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -19,10 +19,22 @@ class User(db.Model):
     email = db.Column(db.String(45), unique=True, primary_key=True, nullable=False)
     name = db.Column(db.String(45))
     password = db.Column(db.String(100))
-    function = db.relationship('Function', backref='user')
+    functions = db.relationship('Function', backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.name
+
+
+class Function(db.Model):
+    __tablename__ = 'functions'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100))
+    language = db.Column(db.String(40))
+    user_email = db.Column(db.String(100), db.ForeignKey('users.email'))
+    cases = db.relationship('Case', backref='function')
+
+    def __repr__(self):
+        return '<Function %r>' % self.link
 
 
 class Case(db.Model):
@@ -36,19 +48,6 @@ class Case(db.Model):
         return '<Case %r>' % self.name
 
 
-class Function(db.Model):
-    __tablename__ = 'functions'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100))
-    language = db.Column(db.String(40))
-    user_email = db.Column(db.String(100), db.ForeignKey('users.email'))
-
-    cases = db.relationship('Cases', backref='functions')
-
-    def __repr__(self):
-        return '<Function %r>' % self.link
-
-
 @app.route('/', methods=['GET'])
 def home():
     return render_template('header.html')
@@ -60,7 +59,7 @@ def users():
     form = UserForm()
     users = User.query.all()
     for user in users:
-        result.append([user.id, user.name, user.email])
+        result.append([user.name, user.email])
     return render_template('users.html', rows=result, form=form)
 
 
@@ -77,10 +76,9 @@ def insert_user():
 
 @app.route('/update_user', methods=['post'])
 def update_user():
-    id = request.form['id']
     name = request.form['name']
     email = request.form['email']
-    user = User.query.filter_by(id=id).first()
+    user = User.query.filter_by(email=email).first()
     user.name = name
     user.email = email
     db.session.add(user)
@@ -99,11 +97,11 @@ def delete_user(id):
 @app.route('/function', methods=['GET'])
 def function():
     result = []
-    form = FileForm()
-    functions = Funtion.query.all()
+    form = FunctionForm()
+    functions = Function.query.all()
     for function in functions:
         result.append([function.id, function.name, function.link])
-    return render_template('files.html', rows=result, form=form)
+    return render_template('functions.html', rows=result, form=form)
 
 
 @app.route('/insert_function', methods=['post'])
@@ -111,14 +109,14 @@ def insert_function():
     form = FunctionForm()
     name = form.name.data
     link = form.link.data
-    function = Funtion(name=name, link=link)
+    function = Function(name=name, link=link)
     db.session.add(function)
     db.session.commit()
-    return redirect('/file')
+    return redirect('/function')
 
 
-@app.route('/update_file', methods=['post'])
-def update_file():
+@app.route('/update_function', methods=['post'])
+def update_function():
     id = request.form['id']
     name = request.form['name']
     link = request.form['link']
@@ -127,90 +125,90 @@ def update_file():
     file.link = link
     db.session.add(file)
     db.session.commit()
-    return redirect('/file')
+    return redirect('/function')
 
 
-@app.route('/delete_file/<string:id>', methods=['get'])
-def delete_file(id):
-    file = File.query.filter_by(id=id).first()
+@app.route('/delete_function/<string:id>', methods=['get'])
+def delete_function(id):
+    file = Function.query.filter_by(id=id).first()
     db.session.delete(file)
     db.session.commit()
-    return redirect('/file')
+    return redirect('/function')
 
 
-@app.route('/doc', methods=['GET'])
-def doc():
+@app.route('/case', methods=['GET'])
+def case():
     result = []
-    form = DocumentationForm()
-    docs = Documentation.query.all()
+    form = CaseForm()
+    docs = Case.query.all()
     for doc in docs:
         result.append([doc.id, doc.actor, doc.link])
-    return render_template('doc.html', rows=result, form=form)
+    return render_template('cases.html', rows=result, form=form)
 
 
-@app.route('/insert_doc', methods=['post'])
-def insert_doc():
-    form = DocumentationForm()
+@app.route('/insert_case', methods=['post'])
+def insert_case():
+    form = CaseForm()
     actor = form.actor.data
     link = form.link.data
-    doc = Documentation(actor=actor, link=link)
+    doc = Case(actor=actor, link=link)
     db.session.add(doc)
     db.session.commit()
-    return redirect('/doc')
+    return redirect('/case')
 
 
-@app.route('/update_doc', methods=['post'])
-def update_doc():
+@app.route('/update_case', methods=['post'])
+def update_case():
     id = request.form['id']
     actor = request.form['actor']
     link = request.form['link']
-    doc = Documentation.query.filter_by(id=id).first()
+    doc = Case.query.filter_by(id=id).first()
     doc.actor = actor
     doc.link = link
     db.session.add(doc)
     db.session.commit()
-    return redirect('/doc')
+    return redirect('/case')
 
 
-@app.route('/delete_doc/<string:id>', methods=['get'])
-def delete_doc(id):
-    doc = Documentation.query.filter_by(id=id).first()
+@app.route('/delete_case/<string:id>', methods=['get'])
+def delete_case(id):
+    doc = Case.query.filter_by(id=id).first()
     db.session.delete(doc)
     db.session.commit()
-    return redirect('/doc')
+    return redirect('/case')
 
-
-@app.route('/dashboard', methods=['get'])
-def dashboard():
-    labels = ['Users', 'Files', 'Documentation']
-    count = [
-        len(User.query.all()),
-        len(File.query.all()),
-        len(Documentation.query.all())
-    ]
-
-    fig, ax = plt.subplots()
-    ax.pie(count, labels=labels, autopct='%1.1f%%')
-    ax.axis('equal')  # Equal aspect ratio ensures the pie chart is circular.
-    ax.set_title('Count rows')
-    pie = "pie"+str(datetime.now())+".png"
-    plt.savefig(f'./static/images/{pie}')
-
-    plt.clf()
-
-    objects = ('Admin', 'Not admin')
-    y_pos = np.arange(len(objects))
-    admin_count = (Documentation.query.filter_by(actor='Admin').count())
-    performance = [admin_count, len(Documentation.query.all()) - admin_count]
-
-    plt.bar(y_pos, performance, align='center', alpha=0.5)
-    plt.xticks(y_pos, objects)
-    plt.ylabel('Usage')
-    plt.title('Actors documentations')
-    bar = "bar" + str(datetime.now()) + ".png"
-    plt.savefig(f'./static/images/{bar}')
-
-    return render_template('dash.html', bar=bar, pie=pie)
+#
+# @app.route('/dashboard', methods=['get'])
+# def dashboard():
+#     labels = ['Users', 'Files', 'Documentation']
+#     count = [
+#         len(User.query.all()),
+#         len(File.query.all()),
+#         len(Documentation.query.all())
+#     ]
+#
+#     fig, ax = plt.subplots()
+#     ax.pie(count, labels=labels, autopct='%1.1f%%')
+#     ax.axis('equal')  # Equal aspect ratio ensures the pie chart is circular.
+#     ax.set_title('Count rows')
+#     pie = "pie"+str(datetime.now())+".png"
+#     plt.savefig(f'./static/images/{pie}')
+#
+#     plt.clf()
+#
+#     objects = ('Admin', 'Not admin')
+#     y_pos = np.arange(len(objects))
+#     admin_count = (Documentation.query.filter_by(actor='Admin').count())
+#     performance = [admin_count, len(Documentation.query.all()) - admin_count]
+#
+#     plt.bar(y_pos, performance, align='center', alpha=0.5)
+#     plt.xticks(y_pos, objects)
+#     plt.ylabel('Usage')
+#     plt.title('Actors documentations')
+#     bar = "bar" + str(datetime.now()) + ".png"
+#     plt.savefig(f'./static/images/{bar}')
+#
+#     return render_template('dash.html', bar=bar, pie=pie)
 
 
 if __name__ == '__main__':
