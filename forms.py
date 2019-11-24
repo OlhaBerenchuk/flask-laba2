@@ -1,19 +1,23 @@
 from flask_wtf import Form
-from wtforms import StringField
+from wtforms import StringField, IntegerField
 from wtforms.validators import Email, InputRequired, URL
 
 
 class UserForm(Form):
-    name = StringField('name', validators=[InputRequired()])
-    email = StringField('email', validators=[InputRequired(), Email(message="It\'s not an email!")])
+    name = StringField('Name', validators=[InputRequired()])
+    email = StringField('Email', validators=[InputRequired(), Email(message="It\'s not an email!")])
 
 
 class FunctionForm(Form):
-    name = StringField('name', validators=[InputRequired()])
-    link = StringField('link', validators=[InputRequired(), URL(message="It\'s not an url")])
+    name = StringField('Name', validators=[InputRequired()])
+    language = StringField('Language', validators=[InputRequired()])
 
 
 class CaseForm(Form):
-    name = StringField('link', validators=[InputRequired(), URL(message="It\'s not an url")])
-    version = StringField('actor', validators=[InputRequired()])
+    name = StringField('Name', validators=[InputRequired()])
+    version = StringField('Version', validators=[InputRequired()])
 
+
+class GroupForm(Form):
+    name = StringField('Name', validators=[InputRequired()])
+    count = IntegerField('Count', validators=[InputRequired()])

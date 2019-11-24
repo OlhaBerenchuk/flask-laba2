@@ -1,13 +1,13 @@
 {% include "header.html" %}
 
 {% block body %}
-<button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add user</button>
+<button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add group</button>
 <table class="table table-striped">
     <tbody>
     <tr>
         <th>Id</th>
         <th>Name</th>
-        <th>Email</th>
+        <th>Count</th>
         <th>Action</th>
     </tr>
 
@@ -17,8 +17,8 @@
             <td>{{row.1}}</td>
             <td>{{row.2}}</td>
             <td>
-                <a href="/update_user/{{ row.0 }}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
-                <a href="/delete_user/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                <a href="/update_group/{{ row.0 }}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
+                <a href="/delete_group/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
             </td>
         </tr>
         <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
@@ -29,15 +29,15 @@
                         <h4 class="modal-title">Update Information</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ url_for('update_user') }}" method="POST">
+                        <form action="{{ url_for('update_group') }}" method="POST">
                             <div class="form-group">
                                 <label>Name:</label>
                                 <input type="hidden" name="id" value="{{row.0}}">
                                 <input type="text" class="form-control" name="name" value="{{row.1}}">
                             </div>
                             <div class="form-group">
-                                <label>Email:</label>
-                                <input type="text" class="form-control" name="email" value="{{row.2}}">
+                                <label>Count:</label>
+                                <input type="text" class="form-control" name="count" value="{{row.2}}">
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Update</button>
@@ -66,13 +66,13 @@
                 <h4 class="modal-title">Please insert data</h4>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('insert_user') }}" method="POST">
+                <form action="{{ url_for('insert_group') }}" method="POST">
                     <div class="form-group">
                         {{ form.name.label }}
                         {{ form.name }}
                     </div>
                     <div class="form-group">
-                        {{ form.email.label }}
+                        {{ form.count.label }}
                         {{ form.email }}
                     </div>
                     <div class="form-group">

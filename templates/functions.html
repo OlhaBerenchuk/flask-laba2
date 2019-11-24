@@ -1,13 +1,13 @@
 {% include "header.html" %}
 
 {% block body %}
-<button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add file</button>
+<button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add function</button>
 <table class="table table-striped">
     <tbody>
     <tr>
-        <th>Serial</th>
+        <th>Id</th>
         <th>Name</th>
-        <th>Link</th>
+        <th>Language</th>
         <th>Action</th>
     </tr>
 
@@ -29,18 +29,18 @@
                         <h4 class="modal-title">Update Information</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ url_for('update_file') }}" method="POST">
+                        <form action="{{ url_for('update_function') }}" method="POST">
                             <div class="form-group">
                                 <label>Name:</label>
                                 <input type="hidden"  name="id" value="{{row.0}}">
                                 <input type="text" class="form-control" name="name" value="{{row.1}}">
                             </div>
                             <div class="form-group">
-                                <label>Link:</label>
-                                <input type="text" class="form-control" name="link" value="{{row.2}}">
+                                <label>Language:</label>
+                                <input type="text" class="form-control" name="language" value="{{row.2}}">
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-primary" type="sbumit">Update</button>
+                                <button class="btn btn-primary" type="submit">Update</button>
                             </div>
                         </form>
                     </div>
@@ -66,14 +66,14 @@
                 <h4 class="modal-title">Please insert data</h4>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('insert_file') }}" method="POST">
+                <form action="{{ url_for('insert_function') }}" method="POST">
                     <div class="form-group">
                         {{ form.name.label }}
                         {{ form.name }}
                     </div>
                     <div class="form-group">
-                        {{ form.link.label }}
-                        {{ form.link }}
+                        {{ form.language.label }}
+                        {{ form.language }}
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Insert Data</button>
