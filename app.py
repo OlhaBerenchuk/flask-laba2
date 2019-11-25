@@ -252,7 +252,7 @@ def delete_case(id):
 
 @app.route('/dashboard', methods=['get'])
 def dashboard():
-    labels = ['Users', 'Files', 'Documentation']
+    labels = ['Users', 'Function', 'Case']
     count = [
         len(User.query.all()),
         len(Function.query.all()),
