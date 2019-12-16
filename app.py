@@ -98,9 +98,10 @@ def insert_company():
     location = form.location.data
     balance = form.balance.data
     type = form.type.data
-    company = OrmCompany(company_name=name, company_location=location, company_balance=balance, company_type=type)
-    db.session.add(company)
-    db.session.commit()
+    if form.validate():
+        company = OrmCompany(company_name=name, company_location=location, company_balance=balance, company_type=type)
+        db.session.add(company)
+        db.session.commit()
     return redirect('/company')
 
 

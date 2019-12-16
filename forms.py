@@ -1,12 +1,12 @@
 from flask_wtf import Form
 from wtforms import StringField, IntegerField, SelectField
-from wtforms.validators import Email, InputRequired, URL
+from wtforms.validators import Email, InputRequired, URL, NumberRange
 
 
 class CompanyForm(Form):
     name = StringField('Name', validators=[InputRequired()])
     location = StringField('Location', validators=[InputRequired()])
-    balance = IntegerField('Balance', validators=[InputRequired()])
+    balance = IntegerField('Balance', validators=[NumberRange(min=1000, max=1000000, message='More than 1000!')])
     type = SelectField('Type', choices=[('org', 'ORG'), ('edu', 'EDU'), ('bis', 'BIS')])
 
 
