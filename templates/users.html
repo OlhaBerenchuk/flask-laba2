@@ -5,9 +5,9 @@
 <table class="table table-striped">
     <tbody>
     <tr>
-        <th>Id</th>
-        <th>Name</th>
         <th>Email</th>
+        <th>Name</th>
+        <th>Phone</th>
         <th>Action</th>
     </tr>
 
@@ -32,12 +32,15 @@
                         <form action="{{ url_for('update_user') }}" method="POST">
                             <div class="form-group">
                                 <label>Name:</label>
-                                <input type="hidden" name="id" value="{{row.0}}">
                                 <input type="text" class="form-control" name="name" value="{{row.1}}">
                             </div>
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input type="text" class="form-control" name="email" value="{{row.2}}">
+                                <input type="text" class="form-control" name="email" value="{{row.0}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone:</label>
+                                <input type="text" class="form-control" name="phone" value="{{row.2}}">
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Update</button>
@@ -74,6 +77,10 @@
                     <div class="form-group">
                         {{ form.email.label }}
                         {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.phone.label }}
+                        {{ form.phone }}
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Insert Data</button>

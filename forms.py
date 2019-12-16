@@ -1,11 +1,19 @@
 from flask_wtf import Form
-from wtforms import StringField, IntegerField
+from wtforms import StringField, IntegerField, SelectField
 from wtforms.validators import Email, InputRequired, URL
+
+
+class CompanyForm(Form):
+    name = StringField('Name', validators=[InputRequired()])
+    location = StringField('Location', validators=[InputRequired()])
+    balance = IntegerField('Balance', validators=[InputRequired()])
+    type = SelectField('Type', choices=[('org', 'ORG'), ('edu', 'EDU'), ('bis', 'BIS')])
 
 
 class UserForm(Form):
     name = StringField('Name', validators=[InputRequired()])
     email = StringField('Email', validators=[InputRequired(), Email(message="It\'s not an email!")])
+    phone = StringField('Phone', validators=[InputRequired()])
 
 
 class FunctionForm(Form):
