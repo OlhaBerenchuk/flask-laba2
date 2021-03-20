@@ -28,7 +28,7 @@ instagram-private-api==1.6.0.0
 instagram-private-api-extensions==0.3.8
 instapy-cli==0.0.12
 itsdangerous==1.1.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 kiwisolver==1.1.0
 Mako==1.1.0
 MarkupSafe==1.1.1
